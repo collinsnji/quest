@@ -1,0 +1,21 @@
+// Copyright (c) 2020 Collin Grimm
+// 
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "browsers": [
+            ">0.25%",
+            "not ie 11",
+            "not op_mini all"
+          ]
+        },
+        "modules": false
+      }
+    ]
+  ]
+}
