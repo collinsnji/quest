@@ -5,7 +5,8 @@
   "main": "build/app.js",
   "scripts": {
     "compile-css": "compass watch --output-style compressed",
-    "build": "webpack --config webpack/prod.js ",
+    "bind": "webpack --config webpack/prod.js ",
+    "build": "webpack --mode production",
     "start": "webpack-dev-server --config webpack/base.js --open",
     "dev": "webpack --config webpack/base.js",
     "test": "echo \"All tests passed yay!\""
@@ -18,7 +19,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "phaser": "^3.22.0"
+    "p5": "^0.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
