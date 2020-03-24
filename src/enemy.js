@@ -31,15 +31,8 @@ export default class Enemy {
         }
     }
     AttackMode(Player, Enemy) {
-        Enemy.overlap(Player.sprite, (curr, col) => {
-
-            // if (col.sprite.position.y > p5.height && this.lives.value > 0) {
-            //     col.lives.sprite.pop().remove();
-            //     col.lives.value -= 1;
-            //     col.sprite.position.x = 150;
-            //     col.sprite.position.y = 200;
-            // }
-            Player.State();
+        this.enemyGroup.overlap(Player.sprite, (enem, ply) => {
+            this.enemyGroup.add(enem);
         });
 
         if (Math.abs(Enemy.position.x - Player.sprite.position.x) <= 250) {
@@ -51,7 +44,6 @@ export default class Enemy {
             else {
                 Enemy.mirrorX(1);
             }
-            //Enemy.velocity.x = 2;
         }
         else {
             Enemy.changeAnimation('attack');

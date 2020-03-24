@@ -14,17 +14,48 @@
     <script src="build/libs/p5.play.js"></script>
     <script src="build/libs/p5.experience.js"></script>
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp&display=swap" rel="stylesheet">
+    <title>Quest</title>
     <style>
         html,
         body {
             margin: 0px;
             padding: 0px;
             box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .div {
+            background: url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/01073865290819.5d61d475f0072.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            top: 0px;
+            left: 0px;
+            filter: blur(5px);
+        }
+
+        .content {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
             flex-direction: column;
+        }
+
+        .blur {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            top: 0px;
+            left: 0px;
         }
 
         canvas {
@@ -34,19 +65,36 @@
         .game-name {
             font-family: 'MedievalSharp', cursive;
             font-size: 6rem;
-            margin-bottom: .1rem;
+            margin: 0rem;
         }
 
         .description {
             font-family: 'MedievalSharp', cursive;
             text-transform: capitalize;
         }
+
+        #form-input {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 
 <body>
-    <h1 class="game-name">Quest</h1>
-    <p class="description">Are you up for the nobel quest to save the people</p>
+    <div class="div"></div>
+    <span class="blur"></span>
+
+    <section class="content">
+        <h1 class="game-name">Quest</h1>
+        <p class="description">Are you up for the nobel quest to save the people</p>
+        <form action="" id="form-input">
+            <label for="player1">Enter Player 1 Name</label>
+            <input id='p1' required="true" name="player1" class="player-input" max="12">
+            <label for="player2">Enter Player 2 Name</label>
+            <input id='p2' required="true" name="player2" class="player-input" max="12">
+            <button class="start">Start</button>
+        </form>
+    </section>
     <script src="build/app.bundle.js"></script>
 </body>
 

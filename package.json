@@ -4,11 +4,8 @@
   "description": "\"A game about the bravest heroes in the Mount\"",
   "main": "build/app.js",
   "scripts": {
-    "compile-css": "compass watch --output-style compressed",
-    "bind": "webpack --config webpack/prod.js ",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --config webpack/base.js --open",
-    "dev": "webpack --config webpack/base.js",
+    "start": "webpack-dev-server --open",
     "test": "echo \"All tests passed yay!\""
   },
   "repository": {

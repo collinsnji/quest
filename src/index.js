@@ -4,13 +4,14 @@ import Enemy from './enemy';
 import p5 from 'p5/lib/p5';
 import 'p5/lib/addons/p5.play';
 
-//window.playerOneName = null || 'Collin';
-//window.playerTwoName = null;
+window.playerOneName = null || 'Collin';
+window.playerTwoName = null || 'Lindsey';
 
 const Quest = (p5) => {
     window.p5 = p5;
-    let PlayerOne = new Player("window.playerOneName");
-    //let PlayerTwo = new Player('Lindsey');
+    let PlayerOne = new Player(playerOneName);
+    let PlayerTwo = new Player('Lindsey');
+
     let Villain = new Enemy();
 
     p5.preload = () => {
@@ -19,13 +20,19 @@ const Quest = (p5) => {
         });
 
         PlayerOne.Preload();
+        PlayerTwo.Preload({
+            atlas: '../assets/tiles/player_2.json',
+            spritesheet: '../assets/sprites/player_2.png',
+            idleFrame: [{ 'name': 'sprite1', "frame": { "x": 0, "y": 1, "width": 47, "height": 56 } }]
+        });
         Villain.Preload();
     }
     p5.setup = () => {
         p5.frameRate(60);
         p5.createCanvas(800, 400);
         PlayerOne.PlayerSetup(150, 200);
-        Villain.CreateEnemy(160, 300, 4);
+        PlayerTwo.PlayerSetup(200, 200);
+        Villain.CreateEnemy(300, 250, 4);
 
         // create Platforms
         Config.__PLATFORM__ = new p5.Group();
@@ -48,7 +55,16 @@ const Quest = (p5) => {
     p5.draw = () => {
         p5.background('black');
         PlayerOne.State();
+        PlayerTwo.State();
 
+        if (Villain.enemyGroup.length === 0 && PlayerOne.score > PlayerTwo.score) {
+            p5.text("Player 1 Wins");
+            p5.noLoop();
+        }
+        if (Villain.enemyGroup.length === 0 && PlayerTwo.score > PlayerOne.score) {
+            p5.text("Player 2 Wins");
+            p5.noLoop();
+        }
         let offSet = 0;
         for (let j = 0; j < 3; j++) {
             for (let i = 0; i < 840; i += 70) {
@@ -57,12 +73,17 @@ const Quest = (p5) => {
             }
             offSet += 840;
         }
-        //Player one
         PlayerOne.DrawPlayer(Config, { livesPos: 'top' })
             .AddControls()
             .Armed('space')
             .Collision(Villain.enemyGroup);
+        PlayerTwo.DrawPlayer(Config, { livesPos: 'bottom' })
+            .AddControls({ up: p5.UP_ARROW, left: p5.LEFT_ARROW, right: p5.RIGHT_ARROW })
+            .Armed('enter')
+            .Collision(Villain.enemyGroup);
+
         Villain.RenderEnemy(Config, PlayerOne);
+        Villain.RenderEnemy(Config, PlayerTwo);
 
         p5.camera.position.x = PlayerOne.sprite.position.x + 10;
         p5.camera.position.y = PlayerOne.sprite.position.y - 80;
@@ -72,13 +93,23 @@ const Quest = (p5) => {
         DieObject.die.position.y = p5.camera.position.y - 170;
         // Draw the sign tiles
         Config.PLATFORM.drawFrame('signRight.png', 0, 270);
-        Config.PLATFORM.drawFrame('signExit.png', 1400, 340);
+        Config.PLATFORM.drawFrame('signExit.png', 2100, 100);
         Config.PLATFORM.drawFrame('tochLit2.png', 700, 270);
 
         // simulate DieObject.die animation
-        if (p5.mouseIsPressed) {
+        if (p5.mouseIsPressed && PlayerOne.turn) {
             DieObject.die.changeAnimation('rolling');
             DieObject.dieFrame = DieObject.die.animation.getFrame();
+            PlayerOne.attack.power = DieObject.dieFrame;
+            PlayerOne.turn = !PlayerOne.turn;
+            PlayerTwo.turn = true;
+        }
+        else if (p5.mouseIsPressed && PlayerTwo.turn) {
+            DieObject.die.changeAnimation('rolling');
+            DieObject.dieFrame = DieObject.die.animation.getFrame();
+            PlayerTwo.attack.power = DieObject.dieFrame;
+            PlayerTwo.turn = !PlayerTwo.turn;
+            PlayerOne.turn = true;
         }
         else {
             if (DieObject.dieFrame) {
@@ -91,5 +122,12 @@ const Quest = (p5) => {
     }
 }
 
-
-new p5(Quest);
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('button').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('form-input').style.display = 'none';
+        (document.getElementById('p1').value.length > 3) ? playerOneName = document.getElementById('p1').value : playerOneName = 'Player 1';
+        (document.getElementById('p2').value.length > 3) ? playerTwoName = document.getElementById('p2').value : playerTwoName = 'Player 2';
+        new p5(Quest);
+    });
+})

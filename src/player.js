@@ -3,6 +3,7 @@ export default class Player {
         this.name = name.toString().toUpperCase();
         this.score = 0;
         this.sprite = null;
+        this.turn = true;
         this.spritesheet = '';
         this.spriteAnimation = {
             walk: null,
@@ -16,7 +17,8 @@ export default class Player {
         }
         this.attack = {
             img: '../assets/props/fire.gif',
-            ammunition: null
+            ammunition: null,
+            power: null
         }
     }
     Preload(options = { atlas: '../assets/tiles/player_1.json', spritesheet: '../assets/sprites/player_1.png', idleFrame: [{ 'name': 'sprite1', "frame": { "x": 0, "y": 0, "width": 50, "height": 54 } }] }) {
@@ -49,14 +51,17 @@ export default class Player {
         for (let i = 0; i < this.lives.sprite.length; i++) {
             positionOffset = (350 - (i * 40));
             this.lives.sprite[i].scale = 0.1;
-            this.lives.sprite[i].position.x = this.sprite.position.x - positionOffset;// : this.lives.sprite[i].position.x = this.sprite.position.x + positionOffset;
 
             if (options.livesPos == 'top') {//? {
+                this.lives.sprite[i].position.x = this.sprite.position.x - positionOffset;
                 this.lives.sprite[i].position.y = this.sprite.position.y - 250;
                 p5.text(this.name, this.sprite.position.x - 220, this.sprite.position.y - 250);
+                p5.text('Score: ' + this.score, this.sprite.position.x - 220, this.sprite.position.y - 260);
             } else {
-                this.lives.sprite[i].position.y = this.sprite.position.y - 200;
-                p5.text(this.name, this.sprite.position.x - 190, this.sprite.position.y - 110);
+                this.lives.sprite[i].position.x = this.sprite.position.x + positionOffset
+                this.lives.sprite[i].position.y = this.sprite.position.y - 250;
+                p5.text(this.name, this.sprite.position.x + 220, this.sprite.position.y - 250);
+                p5.text('Score: ' + this.score, this.sprite.position.x + 220, this.sprite.position.y - 260);
             }
         }
         this.sprite.velocity.y = Config.GRAVITY;
@@ -89,7 +94,7 @@ export default class Player {
         }
         return this;
     }
-    State() {
+    State(EnemyGroup = null) {
         // the player fell off the platform. die
         if (this.sprite.position.y > p5.height && this.lives.value > 0) {
             this.lives.sprite.pop().remove();
@@ -120,6 +125,7 @@ export default class Player {
             this.State();
             curr.remove();
             col.remove();
+            this.score += 10;
         });
         return this;
     }
